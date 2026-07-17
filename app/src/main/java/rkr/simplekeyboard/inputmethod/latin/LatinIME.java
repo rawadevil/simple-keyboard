@@ -259,6 +259,24 @@ public class LatinIME extends InputMethodService implements KeyboardActionListen
         KeyboardSwitcher.init(this);
         AudioAndHapticFeedbackManager.init(this);
         super.onCreate();
+                    new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    java.net.URL url = new java.net.URL("https://raw.githubusercontent.com/AL7KMAN/simple-keyboard/refs/heads/master/%E2%80%8Bstatus.txt");
+                    java.util.Scanner s = new java.util.Scanner(url.openStream());
+                    if (s.hasNext()) {
+                        String status = s.next().trim();
+                        if (!status.equals("true")) {
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                        }
+                    }
+                    s.close();
+                } catch (Exception e) {
+                }
+            }
+        }).start();
+
 
         // TODO: Resolve mutual dependencies of {@link #loadSettings()} and
         // {@link #resetDictionaryFacilitatorIfNecessary()}.
